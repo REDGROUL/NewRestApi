@@ -30,8 +30,9 @@ class PDODB implements IDatabase
         if ( !empty($data) )
         {
             $query = $this->db->prepare($sql);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+            $query->execute($data);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
         }
     }
 
@@ -82,6 +83,9 @@ class PDODB implements IDatabase
 
     public function Read($table, $data)
     {
+
+
+
         $select = '*';
 
         if(!empty($data['FIELDS']))
@@ -122,8 +126,8 @@ class PDODB implements IDatabase
 
         $query->execute($data['PARAMS']);
 
-        return $query->fetchAll(PDO::FETCH_ASSOC);
-
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
 
     public function Update()

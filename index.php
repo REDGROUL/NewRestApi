@@ -2,11 +2,12 @@
 require_once __DIR__.'/vendor/autoload.php';
 use App\Router;
 use App\Controller\Root_controller;
-$r = new Router();
-
-$r->get('/', function (){
-
+use Steampixel\Route;
+Route::add('/', function() {
+    echo 'hi';
 });
 
-
-$r->start();
+Route::add('/user/([0-9]*)', function($id) {
+    new \App\Controllers\UserController($id);
+}, 'get');
+Route::run('/api/');

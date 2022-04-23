@@ -20,11 +20,17 @@ class ComposerStaticInit803456e96bd926810abe5d504af7714f
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'Steampixel' => 
+            array (
+                0 => __DIR__ . '/..' . '/steampixel/simple-php-router/src',
+            ),
+        ),
+    );
+
     public static $classMap = array (
-        'App\\Config' => __DIR__ . '/../..' . '/src/Config.php',
-        'App\\Database\\Database' => __DIR__ . '/../..' . '/src/Database/Database.php',
-        'App\\Database\\IDatabase' => __DIR__ . '/../..' . '/src/Database/IDatabase.php',
-        'App\\Database\\PDODB' => __DIR__ . '/../..' . '/src/Database/PDODB.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
@@ -33,6 +39,7 @@ class ComposerStaticInit803456e96bd926810abe5d504af7714f
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit803456e96bd926810abe5d504af7714f::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit803456e96bd926810abe5d504af7714f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit803456e96bd926810abe5d504af7714f::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit803456e96bd926810abe5d504af7714f::$classMap;
 
         }, null, ClassLoader::class);

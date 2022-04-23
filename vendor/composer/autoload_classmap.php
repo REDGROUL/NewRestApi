@@ -6,9 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Config' => $baseDir . '/src/Config.php',
-    'App\\Database\\Database' => $baseDir . '/src/Database/Database.php',
-    'App\\Database\\IDatabase' => $baseDir . '/src/Database/IDatabase.php',
-    'App\\Database\\PDODB' => $baseDir . '/src/Database/PDODB.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );
