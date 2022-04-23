@@ -1,0 +1,17 @@
+{
+    "name": "red/new-rest-api",
+    "description": "New RESTApi for fix my errors",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "redgroul",
+            "email": "redgroulman@gmail.com"
+        }
+    ],
+    "require": {}
+}
