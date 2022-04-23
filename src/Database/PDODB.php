@@ -26,20 +26,13 @@ class PDODB implements IDatabase
 
     public function Query($sql, $data)
     {
-        $query = $this->db->prepare($sql);
+
         if ( !empty($data) )
         {
-            foreach ($data as $key => $value)
-            {
-                $query->bindValue(":$key", $value);
-            }
+            $query = $this->db->prepare($sql);
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
-        else
-        {
-            //write something
-        }
-        $query->execute();
-        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -73,11 +66,6 @@ class PDODB implements IDatabase
             $sql = "INSERT INTO `$table` ".$FieldString.' VALUES '.$PlaceholderString;
 
             $query = $this->db->prepare($sql);
-
-//            foreach ($data as $key => $value)
-//            {
-//                $query->bindValue(":$key", $value);
-//            }
 
             $query->execute($data);
 
@@ -130,11 +118,6 @@ class PDODB implements IDatabase
 
         $sql = "SELECT ".$select." FROM `".$table."` WHERE ".$NameField;
         $query = $this->db->prepare($sql);
-
-//        foreach ($data['PARAMS'] as $key => $value)
-//        {
-//            $query->bindValue(":$key", $value);
-//        }
 
 
         $query->execute($data['PARAMS']);
