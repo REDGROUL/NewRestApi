@@ -1,8 +1,12 @@
 <?
-
-use App\Database\Database;
-
 require_once __DIR__.'/vendor/autoload.php';
+use App\Router;
+use App\Controller\Root_controller;
+$r = new Router();
+
+$r->get('/', function (){
+
+});
 
 
-$db = new Database(new \App\Database\PDODB());
+$r->start();
