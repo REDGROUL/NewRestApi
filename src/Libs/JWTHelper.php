@@ -2,6 +2,7 @@
 
 
 namespace App\Libs;
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Config;
@@ -42,8 +43,8 @@ class JWTHelper
 
 
         $this->payload = [
-            "Acess"=>JWT::encode($JwtAccess, $this->key, 'HS256'),
-            "Refresh"=>JWT::encode($JwtRefresh, $this->key, 'HS256')
+            "Acess" => JWT::encode($JwtAccess, $this->key, 'HS256'),
+            "Refresh" => JWT::encode($JwtRefresh, $this->key, 'HS256')
         ];
 
         $this->ToJson($this->payload);
@@ -55,9 +56,16 @@ class JWTHelper
         Json_encoder::JsonOut(true, $payload);
     }
 
-    public function CheckToken()
+    public function CheckToken($token)
     {
-
+        try
+        {
+            $decoded = JWT::decode($token, new Key($this->key, 'HS256'));
+        }
+        catch (\Exception $e)
+        {
+            Json_encoder::JsonOut(false, "throw", $e);
+        }
     }
 
 
