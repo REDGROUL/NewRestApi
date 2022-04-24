@@ -11,18 +11,14 @@ class UserController
     public function __construct($id)
     {
 
-        if ($id != null)
-        {
             $userModel = new UserModel();
             $result = $userModel->GetData($id);
-
-            $this->JsonExp($result);
-        }
+            $this->JsonExp(true, $result);
     }
 
-    public function JsonExp($data)
+    public function JsonExp($status, $data)
     {
-        Json_encoder::JsonOut(true, $data);
+        Json_encoder::JsonOut($status, $data);
     }
 
 }
