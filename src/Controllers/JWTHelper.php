@@ -21,7 +21,6 @@ class UserController
 
             if(!empty($name) && !empty($login) && !empty($pass))
             {
-
                 $push = $userModel->PushData(array(
                     "name"=>$name,
                     "login"=>$login,
@@ -29,14 +28,11 @@ class UserController
                 ));
 
                 $dbpush = $userModel->PushData($push);
-
             }
             else
             {
                 echo 'cant get you data';
             }
-
-
 
         }
         else
