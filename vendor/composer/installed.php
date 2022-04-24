@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => NULL,
+        'name' => 'red/new-rest-api',
+        'dev' => true,
+    ),
+    'versions' => array(
+        'firebase/php-jwt' => array(
+            'pretty_version' => 'v6.1.2',
+            'version' => '6.1.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../firebase/php-jwt',
+            'aliases' => array(),
+            'reference' => 'c297139da7c6873dbd67cbd1093f09ec0bbd0c50',
+            'dev_requirement' => false,
+        ),
+        'red/new-rest-api' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => NULL,
+            'dev_requirement' => false,
+        ),
+        'steampixel/simple-php-router' => array(
+            'pretty_version' => '0.7.0',
+            'version' => '0.7.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../steampixel/simple-php-router',
+            'aliases' => array(),
+            'reference' => '91aec2d0bca3619c0552e2bfcebb8936e6f83bb9',
+            'dev_requirement' => false,
+        ),
+    ),
+);

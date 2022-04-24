@@ -1,25 +1,64 @@
 <?php
 
 
-namespace App\Controllers;
+namespace App\Libs;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use App\Config;
 
 class JWTHelper
 {
+    private $key;
+    private $host;
+    private $payload;
+
+
     public function __construct()
     {
-        $key = '7981A54D6D58A2F9ABA77A4C6D12B39A60931E179B919D049AC29FE38A124F70'; //=>ThisIsMySuperPrivateKey
-        $payload = [
-            'iss' => 'localhost',
-            'aud' => 'localhost',
-            'iat' => 1356999524,
-            'nbf' => 1357000000
+
+        $this->key = Config::SERVER_KEY;
+        $this->host = $_SERVER['HTTP_HOST'];
+
+    }
+
+    public function GenerateTokens()
+    {
+        $time = time();
+
+        $JwtAccess = [
+            'iss' => $this->host,
+            'aud' => $this->host,
+            'iat' => $time,
+            'exp' => $time + 900,
+
         ];
 
-        $jwt = JWT::encode($payload, $key, 'HS256');
-        $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+        $JwtRefresh = [
+            'iss' => $this->host,
+            'aud' => $this->host,
+            'iat' => $time + 900,
+            'exp' => $time + 2592000
+        ];
 
-        print_r($jwt);
+
+        $this->payload = [
+            "Acess"=>JWT::encode($JwtAccess, $this->key, 'HS256'),
+            "Refresh"=>JWT::encode($JwtRefresh, $this->key, 'HS256')
+        ];
+
+        $this->ToJson($this->payload);
     }
+
+
+    private function ToJson($payload)
+    {
+        Json_encoder::JsonOut(true, $payload);
+    }
+
+    public function CheckToken()
+    {
+
+    }
+
+
 }
