@@ -32,4 +32,10 @@ class UserModel
 
         return $data;
     }
+
+    public function PushData($data)
+    {
+
+        $data = $this->db->Create('users', $data);
+    }
 }

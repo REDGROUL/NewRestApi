@@ -70,7 +70,8 @@ class PDODB implements IDatabase
 
             $query->execute($data);
 
-
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
         }
 
 

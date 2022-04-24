@@ -2,6 +2,8 @@
 
 namespace App\Database;
 
+use mysql_xdevapi\Result;
+
 class Database
 {
     private $db_object;
@@ -13,13 +15,14 @@ class Database
 
     public function Create($table, $data)
     {
-       return $this->db_object->Create($table, $data);
+        $result = $this->db_object->Create($table, $data);
+        return $result;
     }
 
     public function Read($table, $data)
     {
-        $d = $this->db_object->Read($table, $data);
-        return $d;
+        $result = $this->db_object->Read($table, $data);
+        return $result;
     }
 
     public function Query($sql, $data)
