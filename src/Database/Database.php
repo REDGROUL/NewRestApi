@@ -30,7 +30,7 @@ class Database
      * @return mixed
      */
 
-    public function Read($table, $data)
+    public function Read($table, $data = null)
     {
         $result = $this->db_object->Read($table, $data);
         return $result;

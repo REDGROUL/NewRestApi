@@ -9,6 +9,7 @@ class PDODB implements IDatabase
 {
 
     private $db;
+    private $query;
 
     public function __construct()
     {
@@ -82,10 +83,12 @@ class PDODB implements IDatabase
         // TODO: Implement Delete() method.
     }
 
-    public function Read($table, $data)
+    public function Read($table, $data = null)
     {
         $select = '*';
-
+        $NameField = '';
+        $NameParams = '';
+        $sql = "SELECT ".$select." FROM `".$table;
         if(!empty($data['FIELDS']))
         {
             $select = '';
@@ -104,28 +107,48 @@ class PDODB implements IDatabase
 
         }
 
-        $NameField = '';
-        foreach ($data['PARAMS'] as $key=>$item)
-        {
 
-            if(end($data['PARAMS']) === $item)
+        if(!empty($data['PARAMS']))
+        {
+            foreach ($data['PARAMS'] as $key=>$item)
             {
-                $NameField .= ' `'.$key.'` = :'.$key;
+
+                if(end($data['PARAMS']) === $item)
+                {
+                    $NameField .= ' `'.$key.'` = :'.$key;
+                }
+                else
+                {
+                    $NameField .= ' `'.$key.'` = :'.$key.' AND ';
+                }
             }
-            else
-            {
-                $NameField .= ' `'.$key.'` = :'.$key.' AND ';
-            }
+
+            $NameParams = "`WHERE`".$NameField;
+
+            $sql = "SELECT ".$select." FROM `".$table.$NameParams;
+
         }
 
-        $sql = "SELECT ".$select." FROM `".$table."` WHERE ".$NameField;
         $query = $this->db->prepare($sql);
+
 
 
         $query->execute($data['PARAMS']);
 
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
         return $result;
+    }
+
+
+    private function QueryBind($params, $sql)
+    {
+        if (!empty($sql) && !empty($params))
+        {
+            foreach ($params as $param)
+            {
+                $bind = $query
+            }
+        }
     }
 
     public function Update()
