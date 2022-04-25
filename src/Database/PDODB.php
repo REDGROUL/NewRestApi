@@ -84,9 +84,6 @@ class PDODB implements IDatabase
 
     public function Read($table, $data)
     {
-
-
-
         $select = '*';
 
         if(!empty($data['FIELDS']))

@@ -13,11 +13,22 @@ class Database
         $this->db_object = $db_object;
     }
 
+    /**
+     * @param $table - Таблица
+     * @param $data - Ассоциативный массив данных
+     * @return mixed
+     */
     public function Create($table, $data)
     {
         $result = $this->db_object->Create($table, $data);
         return $result;
     }
+
+    /**
+     * @param $table - Таблица
+     * @param $data - Ассиацтинвый двуменый массив FILES - поля для вывода PARAMS - Условия выборки
+     * @return mixed
+     */
 
     public function Read($table, $data)
     {
