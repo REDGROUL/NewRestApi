@@ -36,7 +36,7 @@ class Database
         return $result;
     }
 
-    public function Query($sql, $data)
+    public function Query($sql, $data = null)
     {
         return $this->db_object->Query($sql, $data);
     }

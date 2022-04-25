@@ -25,17 +25,24 @@ class PDODB implements IDatabase
      *
      */
 
-    public function Query($sql, $data)
+    public function Query($sql, $data = null)
     {
 
-        if ( !empty($data) )
+        if (!empty($sql))
         {
-            $this->query = $this->db->prepare($sql);
-            $this->QueryBind($data);
-            $this->query->execute();
+
+            $this->query = $this->db->prepare($sql); //Подготовка запроса
+
+            if($data != null)
+            {
+                $this->QueryBind($data); //Бинд значений
+            }
+            $this->query->execute(); //Выполнение
+
             $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         }
+
     }
 
 
