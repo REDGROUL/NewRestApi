@@ -22,13 +22,13 @@ class JWTHelper
 
     }
 
-    public function GenerateTokens()
+    public function GenerateTokens($aud)
     {
         $time = time();
 
         $JwtAccess = [
             'iss' => $this->host,
-            'aud' => $this->host,
+            'aud' => $aud,
             'iat' => $time,
             'exp' => $time + 900,
 
@@ -38,7 +38,8 @@ class JWTHelper
             'iss' => $this->host,
             'aud' => $this->host,
             'iat' => $time + 900,
-            'exp' => $time + 2592000
+            'exp' => $time + 2592000,
+            'access' => true
         ];
 
 
