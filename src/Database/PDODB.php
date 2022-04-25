@@ -3,6 +3,7 @@
 namespace App\Database;
 
 use App\Config;
+use App\Libs\Json_encoder;
 use PDO;
 
 class PDODB implements IDatabase
@@ -40,7 +41,33 @@ class PDODB implements IDatabase
             $this->query->execute(); //Выполнение
 
             $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
-            return $result;
+
+            if(!empty($result))
+            {
+
+                return [
+                    "STATUS"=>true,
+                    "DATA"=>$result
+                ];
+            }
+            else
+            {
+                return [
+                    "STATUS"=>false,
+                    "DATA"=>[
+                        "SQL"=>"SQL syntax error"
+                    ]
+                ];
+            }
+        }
+        else
+        {
+            return [
+                "STATUS"=>false,
+                "DATA"=> [
+                    "SQL"=>"SQL is empty"
+                ]
+            ];
         }
 
     }
