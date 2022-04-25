@@ -30,9 +30,10 @@ class PDODB implements IDatabase
 
         if ( !empty($data) )
         {
-            $query = $this->db->prepare($sql);
-            $query->execute($data);
-            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            $this->query = $this->db->prepare($sql);
+            $this->QueryBind($data);
+            $this->query->execute();
+            $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         }
     }
@@ -140,13 +141,14 @@ class PDODB implements IDatabase
     }
 
 
-    private function QueryBind($params, $sql)
+    private function QueryBind($params)
     {
-        if (!empty($sql) && !empty($params))
-        {
-            foreach ($params as $param)
+        if (!empty($params)) {
+
+            foreach ($params as $key=>$param)
             {
-                $bind = $query
+               $bind = $this->query->bindValue(":".$key, $param, PDO::PARAM_STR);
+
             }
         }
     }
