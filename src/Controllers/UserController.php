@@ -35,10 +35,12 @@ class UserController
             }
 
         }
-        else
+        if ($method == "GET")
         {
+
             $result = $userModel->GetData($id);
-            $this->JsonExp(true, $result);
+
+            $this->JsonExp($result['STATUS'], $result['DATA']);
         }
 
 
