@@ -5,11 +5,17 @@ use App\Controller\Root_controller;
 
 use Steampixel\Route;
 Route::add('/', function() {
-    echo 'hi';
+
 });
 
 Route::add('/login', function() {
-    new \App\Controllers\LoginController();
+   $userC=  new \App\Controllers\UserController();
+   $userC->login();
+}, 'post');
+
+Route::add('/register', function() {
+    $userC =  new \App\Controllers\UserController();
+    $userC->register();
 }, 'post');
 
 Route::add('/user/([0-9]*)', function($id) {

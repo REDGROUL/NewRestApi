@@ -8,40 +8,13 @@ use App\Models\UserModel;
 
 class UserController
 {
+
+    private $id;
     public function __construct($id = null)
     {
-        $userModel = new UserModel();
-        $method = $_SERVER['REQUEST_METHOD'];
+        $this-> id = $id;
 
-        if ($method == "POST")
-        {
-            $name = $_POST['name'];
-            $login = $_POST['login'];
-            $pass = $_POST['password'];
 
-            if(!empty($name) && !empty($login) && !empty($pass))
-            {
-                $push = $userModel->PushData(array(
-                    "name"=>$name,
-                    "login"=>$login,
-                    "password"=>$pass
-                ));
-
-                $dbpush = $userModel->PushData($push);
-            }
-            else
-            {
-                echo 'cant get you data';
-            }
-
-        }
-        if ($method == "GET")
-        {
-
-            $result = $userModel->GetData($id);
-
-            $this->JsonExp($result['STATUS'], $result['DATA']);
-        }
 
 
     }
@@ -49,6 +22,34 @@ class UserController
     public function JsonExp($status, $data)
     {
         Json_encoder::JsonOut($status, $data);
+    }
+
+    public function register()
+    {
+        $name = $_POST['name'];
+        $login = $_POST['login'];
+        $pass = $_POST['password'];
+
+        if(!empty($name) && !empty($login) && !empty($pass))
+        {
+            $userModel = new UserModel();
+            $push = $userModel->PushData(array(
+                "name"=>$name,
+                "login"=>$login,
+                "password"=>$pass
+            ));
+
+            $dbpush = $userModel->PushData($push);
+        }
+        else
+        {
+           Json_encoder::JsonOut(false, "error", "Some filed is empty");
+        }
+    }
+
+    public function login()
+    {
+
     }
 
 }
