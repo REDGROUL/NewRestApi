@@ -15,21 +15,27 @@ class UserModel
 
     public function GetData($id)
     {
-        $param = array(
-            "FIELDS"=>[
-                "name",
-                "login",
-                "photo",
-                "status",
-                "online",
-                "last_activity"
-            ],
-            "PARAMS"=>[
-                "id"=>$id
-            ]
-        );
-        $data = $this->db->Read('users', $param);
+//        $param = array(
+//            "FIELDS"=>[
+//                "name",
+//                "login",
+//                "photo",
+//                "status",
+//                "online",
+//                "last_activity"
+//            ],
+//            "PARAMS"=>[
+//                "id"=>$id
+//            ]
+//        );
 
+        $param = [
+            "id"=>$id
+        ];
+        //$data = $this->db->Read('users', $param);
+        $data = $this->db->Query("SELECT * FROM `users` WHERE id = :id", $param);
+
+        var_dump($data);
         return $data;
     }
 
@@ -37,5 +43,7 @@ class UserModel
     {
 
         $data = $this->db->Create('users', $data);
+
+        return $data;
     }
 }

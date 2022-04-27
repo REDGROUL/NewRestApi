@@ -62,11 +62,11 @@ class JWTHelper
         try
         {
             $decoded = JWT::decode($token, new Key($this->key, 'HS256'));
-            Json_encoder::JsonOut(true);
+            Json_encoder::JsonOut(true, "Auth", "ok");
         }
         catch (\Exception $e)
         {
-            Json_encoder::JsonOut(false, "throw", $e);
+            Json_encoder::JsonOut(false, "token", $e->getMessage());
         }
     }
 

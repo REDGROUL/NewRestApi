@@ -6,6 +6,7 @@ use App\Config;
 use App\Libs\Json_encoder;
 use PDO;
 
+
 class PDODB implements IDatabase
 {
 
@@ -14,13 +15,13 @@ class PDODB implements IDatabase
 
     public function __construct()
     {
+
         $DBinfo = Config::GetDBinfo();
         $this->db = new PDO('mysql:host=' . $DBinfo["DB_HOST"] . ';dbname=' . $DBinfo['DB_NAME'], $DBinfo['DB_USER'], $DBinfo['DB_PASS']);
-
     }
 
     /**
-     * @method Query - выполняет кастомный запрос
+     *
      * @param $sql - sql запроос
      * @param $data - ассоциативный массив с данными
      *
@@ -29,43 +30,36 @@ class PDODB implements IDatabase
     public function Query($sql, $data = null)
     {
 
-        if (!empty($sql))
-        {
+        if (!empty($sql)) {
 
             $this->query = $this->db->prepare($sql); //Подготовка запроса
 
-            if($data != null)
-            {
+
+            if ($data != null) {
                 $this->QueryBind($data); //Бинд значений
             }
+
             $this->query->execute(); //Выполнение
 
             $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
 
-            if(!empty($result))
-            {
-
-                return [
-                    "STATUS"=>true,
-                    "DATA"=>$result
-                ];
+            if ( $this->CheckQuerySyntax()['STATUS']!= true) {
+                $resultCheck = $this->CheckQuerySyntax();
+                return $resultCheck;
             }
             else
             {
-                return [
-                    "STATUS"=>false,
-                    "DATA"=>[
-                        "SQL"=>"SQL syntax error"
-                    ]
-                ];
+                $answer = $this->GenerateAnswer($result);
+                return $answer;
             }
-        }
-        else
-        {
+
+
+
+        } else {
             return [
-                "STATUS"=>false,
-                "DATA"=> [
-                    "SQL"=>"SQL is empty"
+                "STATUS" => false,
+                "DATA" => [
+                    "SQL" => "SQL is empty"
                 ]
             ];
         }
@@ -75,39 +69,49 @@ class PDODB implements IDatabase
 
     public function Create($table, $data = [])
     {
-        if ( !empty($data) && !empty($table))
-        {
-            $FieldNames= '';
-            $Placeholder= '';
+        if (!empty($data) && !empty($table)) {
+            $FieldNames = '';
+            $Placeholder = '';
+            foreach ($data as $key => $item) {
 
-            foreach ($data as $key=>$item)
-            {
+                if (end($data) === $item) {
+                    $FieldNames .= '`' . $key . '`';
+                    $Placeholder .= ':' . $key;
 
-                if(end($data) === $item)
-                {
-                    $FieldNames .= '`'.$key.'`';
-                    $Placeholder .= ':'.$key;
-
-                }
-                else
-                {
-                    $FieldNames .= '`'.$key.'`,';
-                    $Placeholder .= ':'.$key.',';
+                } else {
+                    $FieldNames .= '`' . $key . '`,';
+                    $Placeholder .= ':' . $key . ',';
                 }
             }
 
-            $FieldString = '('.$FieldNames.')';
-            $PlaceholderString = '('.$Placeholder.')';
+            $FieldString = '(' . $FieldNames . ')';
+            $PlaceholderString = '(' . $Placeholder . ')';
 
 
-            $sql = "INSERT INTO `$table` ".$FieldString.' VALUES '.$PlaceholderString;
+            $sql = "INSERT INTO `$table` " . $FieldString . ' VALUES ' . $PlaceholderString;
 
-            $query = $this->db->prepare($sql);
+            $this->query = $this->db->prepare($sql);
+            $this->QueryBind($data);
+            $dbe = $this->query->execute();
+            $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
 
-            $query->execute($data);
 
-            $result = $query->fetchAll(PDO::FETCH_ASSOC);
-            return $result;
+            $check = $this->CheckQuerySyntax();
+            if($check['STATUS'] == true)
+            {
+                return [
+                    "STATUS"=>true,
+                    "DATA"=>[
+                        "SQL"=>"add"
+                    ],
+                    "HTTP_CODE"=>201
+                ];
+            }
+            else
+            {
+                return $check;
+            }
+
         }
 
 
@@ -123,19 +127,14 @@ class PDODB implements IDatabase
         $select = '*';
         $NameField = '';
         $NameParams = '';
-        $sql = "SELECT ".$select." FROM `".$table;
-        if(!empty($data['FIELDS']))
-        {
+        $sql = "SELECT " . $select . " FROM `" . $table;
+        if (!empty($data['FIELDS'])) {
             $select = '';
-            foreach ($data['FIELDS'] as $field)
-            {
-                if(end($data['FIELDS']) === $field)
-                {
-                    $select .='`'.$field.'`';
-                }
-                else
-                {
-                    $select .='`'.$field.'`,';
+            foreach ($data['FIELDS'] as $field) {
+                if (end($data['FIELDS']) === $field) {
+                    $select .= '`' . $field . '`';
+                } else {
+                    $select .= '`' . $field . '`,';
                 }
 
             }
@@ -143,29 +142,23 @@ class PDODB implements IDatabase
         }
 
 
-        if(!empty($data['PARAMS']))
-        {
-            foreach ($data['PARAMS'] as $key=>$item)
-            {
+        if (!empty($data['PARAMS'])) {
+            foreach ($data['PARAMS'] as $key => $item) {
 
-                if(end($data['PARAMS']) === $item)
-                {
-                    $NameField .= ' `'.$key.'` = :'.$key;
-                }
-                else
-                {
-                    $NameField .= ' `'.$key.'` = :'.$key.' AND ';
+                if (end($data['PARAMS']) === $item) {
+                    $NameField .= ' `' . $key . '` = :' . $key;
+                } else {
+                    $NameField .= ' `' . $key . '` = :' . $key . ' AND ';
                 }
             }
 
-            $NameParams = "`WHERE`".$NameField;
+            $NameParams = "`WHERE`" . $NameField;
 
-            $sql = "SELECT ".$select." FROM `".$table.$NameParams;
+            $sql = "SELECT " . $select . " FROM `" . $table . $NameParams;
 
         }
 
         $query = $this->db->prepare($sql);
-
 
 
         $query->execute($data['PARAMS']);
@@ -174,18 +167,73 @@ class PDODB implements IDatabase
         return $result;
     }
 
-
+    /**
+     *
+     * @param $params - ассоциативный массив
+     *
+     */
     private function QueryBind($params)
     {
         if (!empty($params)) {
 
-            foreach ($params as $key=>$param)
-            {
-               $bind = $this->query->bindValue(":".$key, $param, PDO::PARAM_STR);
+            foreach ($params as $key => $param) {
+                $bind = $this->query->bindValue(":" . $key, $param, PDO::PARAM_STR);
 
             }
         }
     }
+
+    /**
+     * Проверяет синтаксис запроса
+     * @return array|bool
+     */
+
+    private function CheckQuerySyntax()
+    {
+        //var_dump($this->query->errorInfo());
+        if (!empty($this->query->errorInfo()[2])) {
+            return [
+                "STATUS" => false,
+                "DATA" => [
+                    "SQL" => $this->query->errorInfo()[2]
+                ],
+                "HTTP_CODE" => 400
+            ];
+
+        } else {
+
+          return [
+              "STATUS"=>true
+          ];
+        }
+    }
+
+
+    /**
+     *
+     * @param $result - ассоциативный массив с данными из бд
+     * @return array
+     *
+     */
+
+    private function GenerateAnswer($result)
+    {
+        if (!empty($result)) {
+
+            return [
+                "STATUS" => true,
+                "DATA" => $result
+            ];
+        } else {
+            return [
+                "STATUS" => false,
+                "DATA" => [
+                    "SQL" => "Not found"
+                ]
+            ];
+        }
+    }
+
 
     public function Update()
     {
