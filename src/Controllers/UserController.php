@@ -60,9 +60,6 @@ class UserController
             $jwt->GenerateTokens($UMResult['DATA'][0]['login']);
         }
 
-
-
-
     }
 
 }

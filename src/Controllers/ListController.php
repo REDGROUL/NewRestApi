@@ -9,7 +9,6 @@ class ListController
 
     public function __construct()
     {
-
     }
 
 
