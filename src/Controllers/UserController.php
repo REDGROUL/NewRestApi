@@ -4,6 +4,7 @@
 namespace App\Controllers;
 use App\Database\Database;
 use App\Libs\Json_encoder;
+use App\Libs\JWTHelper;
 use App\Models\UserModel;
 
 class UserController
@@ -49,12 +50,19 @@ class UserController
     public function login()
     {
         $userModel = new UserModel();
-        $db = $userModel->GetData(1);
-        if($db['HTTP_CODE'])
-        {
-            $this->httpCode = $db['HTTP_CODE'];
+        $login = $_POST['login'];
+        $pass = $_POST['password'];
+        $UMResult = $userModel->Auth($login, $pass);
+        $passHash = $UMResult['DATA'][0]['password'];
+
+        if (password_verify($pass, $passHash)) {
+            $jwt = new JWTHelper();
+            $jwt->GenerateTokens($UMResult['DATA'][0]['login']);
         }
-        Json_encoder::JsonOut($db['STATUS'], $db['DATA'], '', $this->httpCode);
+
+
+
+
     }
 
 }

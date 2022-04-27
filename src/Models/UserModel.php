@@ -2,41 +2,45 @@
 
 
 namespace App\Models;
+
 use App\Database\Database;
 use App\Database\PDODB;
 
 class UserModel
 {
     private $db;
+
     public function __construct()
     {
         $this->db = new Database(new PDODB());
     }
 
-    public function GetData($id)
+    public function Auth($login, $pass)
     {
-//        $param = array(
-//            "FIELDS"=>[
-//                "name",
-//                "login",
-//                "photo",
-//                "status",
-//                "online",
-//                "last_activity"
-//            ],
-//            "PARAMS"=>[
-//                "id"=>$id
-//            ]
-//        );
 
-        $param = [
-            "id"=>$id
-        ];
-        //$data = $this->db->Read('users', $param);
-        $data = $this->db->Query("SELECT * FROM `users` WHERE id = :id", $param);
+        if(!empty($login) && !empty($pass))
+        {
+            $param = [
+                "FIELDS" => [
+                    "id",
+                    "name",
+                    "login",
+                    "password"
+                ],
+                "PARAMS"=>[
+                    "login" => $login
+                ]
+            ];
+            $data = $this->db->Read('users', $param);
 
-        var_dump($data);
-        return $data;
+
+            return $data;
+        }
+
+
+
+
+
     }
 
     public function PushData($data)

@@ -43,16 +43,13 @@ class PDODB implements IDatabase
 
             $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
 
-            if ( $this->CheckQuerySyntax()['STATUS']!= true) {
-                $resultCheck = $this->CheckQuerySyntax();
+            if ($this->CheckQuery()['STATUS'] != true) {
+                $resultCheck = $this->CheckQuery();
                 return $resultCheck;
-            }
-            else
-            {
+            } else {
                 $answer = $this->GenerateAnswer($result);
                 return $answer;
             }
-
 
 
         } else {
@@ -96,19 +93,16 @@ class PDODB implements IDatabase
             $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
 
 
-            $check = $this->CheckQuerySyntax();
-            if($check['STATUS'] == true)
-            {
+            $check = $this->CheckQuery();
+            if ($check['STATUS'] == true) {
                 return [
-                    "STATUS"=>true,
-                    "DATA"=>[
-                        "SQL"=>"add"
+                    "STATUS" => true,
+                    "DATA" => [
+                        "SQL" => "add"
                     ],
-                    "HTTP_CODE"=>201
+                    "HTTP_CODE" => 201
                 ];
-            }
-            else
-            {
+            } else {
                 return $check;
             }
 
@@ -152,19 +146,31 @@ class PDODB implements IDatabase
                 }
             }
 
-            $NameParams = "`WHERE`" . $NameField;
+            $NameParams = "` WHERE" . $NameField;
 
             $sql = "SELECT " . $select . " FROM `" . $table . $NameParams;
 
         }
 
-        $query = $this->db->prepare($sql);
+        $this->query = $this->db->prepare($sql);
+        $this->QueryBind($data['PARAMS']);
+
+        $this->query->execute();
+
+        $check = $this->CheckQuery();
+        $result = $this->query->fetchAll(PDO::FETCH_ASSOC);
 
 
-        $query->execute($data['PARAMS']);
+        if ($check['STATUS'] == true) {
+            return
+                ["STATUS" => true,
+                "DATA" =>$result,
+                "HTTP_CODE" => 201];
 
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+
+        } else {
+            return $check;
+        }
     }
 
     /**
@@ -188,7 +194,7 @@ class PDODB implements IDatabase
      * @return array|bool
      */
 
-    private function CheckQuerySyntax()
+    private function CheckQuery()
     {
         //var_dump($this->query->errorInfo());
         if (!empty($this->query->errorInfo()[2])) {
@@ -202,9 +208,9 @@ class PDODB implements IDatabase
 
         } else {
 
-          return [
-              "STATUS"=>true
-          ];
+            return [
+                "STATUS" => true
+            ];
         }
     }
 
