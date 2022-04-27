@@ -18,17 +18,4 @@ Route::add('/register', function() {
     $userC->register();
 }, 'post');
 
-Route::add('/user/([0-9]*)', function($id) {
-    new \App\Controllers\UserController($id);
-}, 'get');
-
-Route::add('/user', function() {
-    new \App\Controllers\UserController();
-
-}, 'post');
-
-Route::add('/user/update', function() {
-    new \App\Controllers\UserController();
-
-}, '');
 Route::run('/api/');
