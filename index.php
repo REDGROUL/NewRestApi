@@ -8,14 +8,19 @@ Route::add('/', function() {
 
 });
 
-Route::add('/login', function() {
+Route::add('/api/login', function() {
    $userC=  new \App\Controllers\UserController();
    $userC->login();
 }, 'post');
 
-Route::add('/register', function() {
+Route::add('/login', function() {
+   $userC=  new \App\Controllers\UserController();
+   $userC->login();
+}, 'get');
+
+Route::add('/api/register', function() {
     $userC =  new \App\Controllers\UserController();
     $userC->register();
 }, 'post');
 
-Route::run('/api/');
+Route::run('/');

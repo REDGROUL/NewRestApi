@@ -12,8 +12,10 @@ class UserController
 
     private $id;
     private $httpCode;
+    private $method;
     public function __construct($id = null)
     {
+        $this->method = $_SERVER['REQUEST_METHOD'];
         $this-> id = $id;
     }
 
@@ -49,6 +51,11 @@ class UserController
 
     public function login()
     {
+        if($this->method == "GET")
+        {
+            require_once 'src/Views/Login.php';
+        }
+
         $userModel = new UserModel();
         $login = $_POST['login'];
         $pass = $_POST['password'];
